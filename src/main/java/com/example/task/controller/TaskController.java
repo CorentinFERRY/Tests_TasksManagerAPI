@@ -30,13 +30,13 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<Task> createTask(String description){
+    public ResponseEntity<Task> createTask(@RequestParam String description){
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.addTask(description));
 
     }
 
     @PutMapping("/{taskId}/complete")
-    public ResponseEntity<?> completeTask(String taskId){
+    public ResponseEntity<?> completeTask(@PathVariable String taskId){
         if(taskService.completeTask(taskId)){
             return ResponseEntity.ok("Task completed !");
         }
@@ -44,8 +44,10 @@ public class TaskController {
     }
 
     @DeleteMapping("/{taskId}")
-    public ResponseEntity<?> delete(String taskId) {
-        taskService.deleteTask(taskId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> delete(@PathVariable String taskId) {
+        if(taskService.deleteTask(taskId)){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }

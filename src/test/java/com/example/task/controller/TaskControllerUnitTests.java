@@ -15,6 +15,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,5 +51,18 @@ public class TaskControllerUnitTests {
                 .andExpect(jsonPath("$[1].taskDescription").value("Task 2"));
 
         verify(taskService, times(1)).getAllTasks();
+    }
+
+    @Test
+    void shouldReturnTask() throws Exception {
+        Task task = new Task("Task 1");
+        when(taskService.addTask(task.getTaskDescription())).thenReturn(task);
+
+        mockMvc.perform(post("/tasks")
+                .param("description", "Task 1"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.taskDescription").value("Task 1"))
+                .andExpect(jsonPath("$.taskId").isNotEmpty())
+                .andExpect(jsonPath("$.completed").value(false));
     }
 }
