@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService {
@@ -21,5 +22,17 @@ public class TaskService {
 
     public List<Task> getAllTasks() {
         return taskList;
+    }
+
+    public boolean deleteTask(String id){
+        return taskList.removeIf(task -> task.getTaskId().equals(id));
+    }
+
+    public boolean completeTask(String id){
+        Optional<Task> taskToSetCompleted = taskList.stream()
+            .filter(task -> task.getTaskId().equals(id))
+            .findFirst();
+        taskToSetCompleted.ifPresent(task -> task.setCompleted(true));
+        return taskToSetCompleted.isPresent();
     }
 }

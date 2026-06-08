@@ -2,10 +2,10 @@ package com.example.task.controller;
 
 import com.example.task.model.Task;
 import com.example.task.service.TaskService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +27,25 @@ public class TaskController {
     public ResponseEntity<List<Task>> listTasks() {
         List<Task> tasks = taskService.getAllTasks();
         return ResponseEntity.ok(tasks);
+    }
+
+    @PostMapping
+    public ResponseEntity<Task> createTask(String description){
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.addTask(description));
+
+    }
+
+    @PutMapping("/{taskId}/complete")
+    public ResponseEntity<?> completeTask(String taskId){
+        if(taskService.completeTask(taskId)){
+            return ResponseEntity.ok("Task completed !");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task doesn't exist !");
+    }
+
+    @DeleteMapping("/{taskId}")
+    public ResponseEntity<?> delete(String taskId) {
+        taskService.deleteTask(taskId);
+        return ResponseEntity.noContent().build();
     }
 }
