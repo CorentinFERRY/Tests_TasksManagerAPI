@@ -48,6 +48,6 @@ public class TaskController {
         if(taskService.deleteTask(taskId)){
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task doesn't exist !");
     }
 }
