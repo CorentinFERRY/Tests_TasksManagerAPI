@@ -66,7 +66,7 @@ public class TaskControllerUnitTests {
             when(taskService.addTask(task.getTaskDescription())).thenReturn(task);
 
             mockMvc.perform(post("/tasks")
-                            .param("description", "Task 1"))
+                    .param("description", task.getTaskDescription()))
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.taskDescription").value("Task 1"))
                     .andExpect(jsonPath("$.taskId").isNotEmpty())
